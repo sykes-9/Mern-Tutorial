@@ -1,60 +1,67 @@
-import {useState, useEffect} from  'react'
-import { FaSignInAlt } from 'react-icons/fa'
-import {useSelector, useDispatch} from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import { login, reset } from '../features/auth/authSlice'
-import Spinner from '../components/Spinner'
+import { useState, useEffect } from 'react';
+import { FaSignInAlt } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { login, reset } from '../features/auth/authSlice';
+import Spinner from '../components/Spinner';
 
 function Login() {
-    const [formData,  setFormData] = useState({
-        email: '',
-        password: '',
-    })
+  // State variables for email and password
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
 
-    const { email, password } = formData
+  const { email, password } = formData;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+  // Selecting data from Redux store
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
-    const {user, isLoading, isError, isSuccess, message} = useSelector(
-      (state) => state.auth)
-
-      useEffect(() => {
-        if(isError) {
-          toast.error(message)
-        }
-  
-        if(isSuccess || user) {
-          navigate('/')
-        }
-  
-        dispatch(reset())
-  },[user, isError, isSuccess, message, navigate, dispatch])
-
-    const onChange = (e) => {
-       setFormData((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-       }))
+  // Effect to handle success, error, and navigation
+  useEffect(() => {
+    // Display error message if there's an error
+    if (isError) {
+      toast.error(message);
     }
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-
-        const userData = {
-          email,
-          password,
-        }
-
-        dispatch(login(userData))
+    // Redirect to dashboard on successful login
+    if (isSuccess || user) {
+      navigate('/');
     }
 
-    if(isLoading) {
-      return<Spinner />
-    }
+    // Reset the authentication state
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
 
+  // Function to update form data on input change
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
+  // Function to handle form submission
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    // Dispatch login action with user data
+    const userData = {
+      email,
+      password,
+    };
+    dispatch(login(userData));
+  };
+
+  // Render spinner if loading
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -67,6 +74,7 @@ function Login() {
 
       <section className="form">
         <form onSubmit={onSubmit}>
+          {/* Email input */}
           <div className="form-group">
             <input
               type="email"
@@ -78,6 +86,7 @@ function Login() {
               onChange={onChange}
             />
           </div>
+          {/* Password input */}
           <div className="form-group">
             <input
               type="password"
@@ -89,17 +98,16 @@ function Login() {
               onChange={onChange}
             />
           </div>
-          
+          {/* Submit button */}
           <div className="form-group">
-            <button type="submit" className='btn btn-block'>
-                Submit
+            <button type="submit" className="btn btn-block">
+              Submit
             </button>
           </div>
         </form>
       </section>
     </>
   );
-  
 }
 
-export default Login
+export default Login;
