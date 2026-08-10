@@ -1,21 +1,24 @@
-const express =  require('express');
-const colors = require('colors')
-const { errorHandler } = require('./middleware/errorMiddleware');
-const connectDB = require('./config/db');
-const dotenv = require('dotenv').config()
-const port = process.env.PORT || 5000
-
+const express = require("express");
+const colors = require("colors");
+const { errorHandler } = require("./middleware/errorMiddleware");
+const { logger } = require("./middleware/loggerMiddleware");
+const connectDB = require("./config/db");
+const dotenv = require("dotenv").config();
+const port = process.env.PORT || 5000;
 
 connectDB();
 
-const app = express()
+const app = express();
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.use('/api/goals', require('./routes/goalRoutes'))
-app.use('/api/users', require('./routes/userRoutes'))
+app.use(logger);
 
-app.use(errorHandler)
+app.use("/api/goals", require("./routes/goalRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
+app.use("/api/health", require("./routes/healthRoutes"));
 
-app.listen(port, () => console.log(`Server started on port ${port}`))
+app.use(errorHandler);
+
+app.listen(port, () => console.log(`Live reload is working! port ${port}`));
