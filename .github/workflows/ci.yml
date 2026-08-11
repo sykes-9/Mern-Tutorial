@@ -35,6 +35,6 @@ jobs:
       - run: npm run build
         working-directory: ./frontend
 
-      - run: docker build -t mern-backend ./backend
+      - run: docker build -t mern-backend -f ./backend/Dockerfile.prod ./backend
 
-      - run: docker build -t mern-frontend ./frontend
+      - run: docker build -t mern-frontend -f ./frontend/Dockerfile.prod ./frontend
