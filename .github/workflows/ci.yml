@@ -16,6 +16,8 @@ jobs:
 
       - run: node --version
 
+      - run: docker --version
+
       - run: ls
 
       - run: npm ci
@@ -24,11 +26,15 @@ jobs:
       - run: npm ci
         working-directory: ./frontend
 
+      - run: npm test
+        working-directory: ./backend
+
       - run: npm test -- --watchAll=false
         working-directory: ./frontend
 
       - run: npm run build
         working-directory: ./frontend
 
-      - run: npm test
-        working-directory: ./backend
+      - run: docker build -t mern-backend ./backend
+
+      - run: docker build -t mern-frontend ./frontend
