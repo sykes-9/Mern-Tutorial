@@ -35,6 +35,15 @@ jobs:
       - run: npm run build
         working-directory: ./frontend
 
-      - run: docker build -t mern-backend -f ./backend/Dockerfile.prod ./backend
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - run: docker build -t mern-frontend -f ./frontend/Dockerfile.prod ./frontend
+      - run: docker build -t sykes9/mern-backend:${{ github.sha }} -f ./backend/Dockerfile.prod ./backend
+
+      - run: docker build -t sykes9/mern-frontend:${{ github.sha }} -f ./frontend/Dockerfile.prod ./frontend
+
+      - run: docker push sykes9/mern-backend:${{ github.sha }}
+
+      - run: docker push sykes9/mern-frontend:${{ github.sha }}
