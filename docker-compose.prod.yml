@@ -1,17 +1,13 @@
 services:
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
+    image: sykes9/mern-frontend:${IMAGE_TAG}
     container_name: frontend-prod
     restart: always
     ports:
       - "80:80"
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
+    image: sykes9/mern-backend:${IMAGE_TAG}
     container_name: backend-prod
     restart: always
     environment:
