@@ -67,13 +67,7 @@ jobs:
             --instance-ids i-060a68e4dba065f5a \
             --document-name "AWS-RunShellScript" \
             --parameters 'commands=[
-              "set -e",
-              "cd /home/ec2-user/mern-production",
-              "export IMAGE_TAG=${{ github.sha }}",
-              "export JWT_SECRET=$(aws ssm get-parameter --name /mern-production/JWT_SECRET --with-decryption --query Parameter.Value --output text)",
-              "docker compose -f docker-compose.prod.yml pull",
-              "docker compose -f docker-compose.prod.yml up -d",
-              "docker compose -f docker-compose.prod.yml ps"
+              "sudo -u ec2-user bash -c '\''set -e; cd /home/ec2-user/mern-production; export IMAGE_TAG=${{ github.sha }}; export JWT_SECRET=$(aws ssm get-parameter --name /mern-production/JWT_SECRET --with-decryption --query Parameter.Value --output text); docker compose -f docker-compose.prod.yml pull; docker compose -f docker-compose.prod.yml up -d; docker compose -f docker-compose.prod.yml ps'\''"
             ]' \
             --query "Command.CommandId" \
             --output text)
