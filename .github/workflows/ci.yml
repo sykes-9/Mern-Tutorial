@@ -68,7 +68,7 @@ jobs:
             --document-name "AWS-RunShellScript" \
             --parameters 'commands=[
               "set -e",
-              "cd ~/mern-production",
+              "cd /home/ec2-user/mern-production",
               "export IMAGE_TAG=${{ github.sha }}",
               "export JWT_SECRET=$(aws ssm get-parameter --name /mern-production/JWT_SECRET --with-decryption --query Parameter.Value --output text)",
               "docker compose -f docker-compose.prod.yml pull",
