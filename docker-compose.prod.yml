@@ -15,6 +15,13 @@ services:
       NODE_ENV: production
       MONGO_URI: mongodb://mongo:27017/goalsetter
       JWT_SECRET: ${JWT_SECRET}
+  
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: us-east-1
+        awslogs-group: /mern-production
+        awslogs-stream: backend
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
